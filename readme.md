@@ -5,6 +5,9 @@ Bash prompt for IBM Cloud
 Adds IBM Cloud information to your prompt/PS1.
 
 
+![ibmcloud_prompt.png](ibmcloud_prompt.png)
+
+
 Quickstart
 ----------
 
