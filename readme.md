@@ -1,5 +1,5 @@
-Bash prompt for IBM Cloud
--------------------------
+Informational prompt for IBM Cloud
+----------------------------------
 
 
 Adds IBM Cloud information to your prompt/PS1.
