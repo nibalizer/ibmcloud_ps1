@@ -36,6 +36,7 @@ txtrst='\e[0m'    # Text Reset
 
 
 # Prompt snippet to show ibmcloud account status 
+# Zsh version
 __ibmcloud_ps1() {
     if [ -f ~/.bluemix/config.json ]; then
         ibm_user=$(cat ~/.bluemix/config.json  | jq '.Account.Owner' | tr -d '"')

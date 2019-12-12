@@ -14,7 +14,7 @@ Quickstart
 
 1. Download the repo
 
-2. Source `ibmcloud_prompt.sh` in your `.bashrc` or similar
+2. Source `ibmcloud_prompt.bash` in your `.bashrc` or similar
 
 3. Set up a `PROMPT_COMMAND` that calls `__ibmcloud_ps1` on its way to set `PS1`
 
@@ -28,14 +28,14 @@ Configuration Environment Variables
 
 
 
-Example Installation
---------------------
-
+Example Bash Installation
+--------------------------
 
 Add this to `.bashrc`
 
 
 ```bash
+source <path to ibmcloud_prompt.bash>
 # Just an example of where this goes
 set_prompt() {
     PS1="[$(__ibmcloud_ps1)]"
@@ -43,4 +43,24 @@ set_prompt() {
 }
 
 PROMPT_COMMAND=set_prompt
+```
+
+Example Zsh Installation
+------------------------
+
+Add this or something like it to `.zshrc`
+
+
+```zsh
+source <path to ibmcloud_prompt.zsh>
+__setprompt() {
+
+    PS1="[$(__ibmcloud_ps1)]"
+    PS1+=" %1~%f%% "
+
+}
+
+precmd() {
+    __setprompt
+}
 ```
