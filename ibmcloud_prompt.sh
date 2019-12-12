@@ -40,10 +40,10 @@ __ibmcloud_ps1() {
     if [ -f ~/.bluemix/config.json ]; then
         ibm_user=$(cat ~/.bluemix/config.json  | jq '.Account.Owner' | tr -d '"')
         region=$(cat ~/.bluemix/config.json  | jq '.Region' | tr -d '"')
-    fi
-    if [ ! -z "${IBMCLOUD_PS1_COLOR_NO}" ]; then
-        echo "${ibm_user}@${region}"
-    else
-        echo "\[${bldpur}\]${ibm_user}\[${txtrst}\]@\[${bldylw}\]${region}\[${txtrst}\]"
+        if [ ! -z "${IBMCLOUD_PS1_COLOR_NO}" ]; then
+            echo "${ibm_user}@${region}"
+        else
+            echo "\[${bldpur}\]${ibm_user}\[${txtrst}\]@\[${bldylw}\]${region}\[${txtrst}\]"
+        fi
     fi
 }
