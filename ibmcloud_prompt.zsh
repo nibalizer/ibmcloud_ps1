@@ -12,14 +12,3 @@ __ibmcloud_ps1() {
         fi
     fi
 }
-
-__setprompt() {
-
-    PS1="[$(__ibmcloud_ps1)]"
-    PS1+=" %1~%f%% "
-
-}
-
-precmd() {
-    __setprompt
-}
