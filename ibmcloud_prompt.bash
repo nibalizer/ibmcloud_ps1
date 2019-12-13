@@ -34,17 +34,70 @@ bakcyn='\e[46m'   # Cyan
 bakwht='\e[47m'   # White
 txtrst='\e[0m'    # Text Reset
 
+#fizzbuzz/c100-e-us-east-containers-cloud-ibm-com:30566/IAM#skrum@us.ibm.com
+#current-context: nibz-k8s/bnpaoppd08v2df1qkgpg
+# current-context: default/c100-e-us-south-containers-cloud-ibm-com:30252/IAM#skrum@us.ibm.com
+#current-context: backend/c100-e-us-south-containers-cloud-ibm-com:30252/IAM#skrum@us.ibm.com
+#current-context: default/c100-e-us-east-containers-cloud-ibm-com:30566/IAM#skrum@us.ibm.com
+# 
+#default[devadvo@us.ibm.com@us-south]nibz@huygens:~/devel/nibalizer/ibmcloud_ps1$ k
+#kubectl config view --minify --output 'jsonpath={..server}'
+
+#kubectl config view --minify --output 'jsonpath={..user}'
+
+
+
+
 
 # Prompt snippet to show ibmcloud account status 
 # Zsh version
 __ibmcloud_ps1() {
-    if [ -f ~/.bluemix/config.json ]; then
+    if [ ! -f ~/.bluemix/config.json ]; then
+        return
+    fi
+    out=""
+    if [ ! -z "${IBMCLOUD_PS1_SHOW_IAM}" ]; then
+        if [ -z "$out" ]; then
+            prefix=""
+        else
+            prefix=" "
+        fi
         ibm_user=$(cat ~/.bluemix/config.json  | jq '.Account.Owner' | tr -d '"')
         region=$(cat ~/.bluemix/config.json  | jq '.Region' | tr -d '"')
         if [ ! -z "${IBMCLOUD_PS1_COLOR_NO}" ]; then
-            echo "${ibm_user}@${region}"
+            out+="${ibm_user}@${region}"
+
         else
-            echo "\[${bldpur}\]${ibm_user}\[${txtrst}\]@\[${bldylw}\]${region}\[${txtrst}\]"
+            out+="\[${bldpur}\]${ibm_user}\[${txtrst}\]@\[${bldylw}\]${region}\[${txtrst}\]"
         fi
     fi
+    if [ ! -z "${IBMCLOUD_PS1_SHOW_KUBE}" ]; then
+        if [ -z "$out" ]; then
+            prefix=""
+        else
+            prefix=" "
+        fi
+        server=$(kubectl config view --minify --output 'jsonpath={..server}')
+        if echo $server | grep 'containers.cloud.ibm.com' >/dev/null; then
+            # Using IBM Kube
+            kube_namespace=$(kubectl config view --minify --output 'jsonpath={..namespace}')
+            if kubectl config view --minify --output 'jsonpath={..user}' | grep IAM >/dev/null; then
+                # ROKS cluster
+                kube_name='OpenShift'
+            else
+                # IKS cluster
+                kube_name=$(kubectl config current-context | cut -d "/" -f 1)
+            fi
+
+        else
+            # Not using IBM Kube, name=context
+            kube_name=$(kubectl config current-context)
+        fi
+        if [ ! -z "${IBMCLOUD_PS1_COLOR_NO}" ]; then
+            out+="${prefix}${kube_name} N: ${kube_namespace}"
+        else
+            out+="${prefix}\[${bldpur}\]${kube_name}\[${txtrst}\]:\[${bldylw}\]${kube_namespace}\[${txtrst}\]"
+        fi
+    fi
+    echo "${out}"
 }
